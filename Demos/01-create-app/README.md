@@ -1,0 +1,3 @@
+# <a name="completed-module-create-a-php-web-app"></a>Módulo completado: crear una aplicación Web de PHP
+
+La versión del proyecto en este directorio refleja cómo completar el tutorial hasta la [creación de una aplicación Web de php](https://docs.microsoft.com/graph/training/php-tutorial?tutorial-step=1). Si usa esta versión del proyecto, debe completar el resto del tutorial a partir de [registrar la aplicación en el portal](https://docs.microsoft.com/graph/training/php-tutorial?tutorial-step=2).
