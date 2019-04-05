@@ -1,41 +1,32 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="f7cde-101">En este ejercicio, creará un nuevo registro de aplicaciones Web de Azure AD mediante el portal de registro de aplicaciones (ARP).</span><span class="sxs-lookup"><span data-stu-id="f7cde-101">In this exercise, you will create a new Azure AD web application registration using the Application Registry Portal (ARP).</span></span>
+<span data-ttu-id="f6d3e-101">En este ejercicio, creará un nuevo registro de aplicaciones Web de Azure AD con el centro de administración de Azure Active Directory.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-101">In this exercise, you will create a new Azure AD web application registration using the Azure Active Directory admin center.</span></span>
 
-1. <span data-ttu-id="f7cde-102">Abra un explorador y vaya al [portal de registro de aplicaciones](https://apps.dev.microsoft.com).</span><span class="sxs-lookup"><span data-stu-id="f7cde-102">Open a browser and navigate to the [Application Registration Portal](https://apps.dev.microsoft.com).</span></span> <span data-ttu-id="f7cde-103">Inicie sesión con una **cuenta personal** (también conocido como Microsoft Account) o una **cuenta profesional o educativa**.</span><span class="sxs-lookup"><span data-stu-id="f7cde-103">Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.</span></span>
+1. <span data-ttu-id="f6d3e-102">Abra un explorador y vaya al [centro de administración de Azure Active Directory](https://aad.portal.azure.com).</span><span class="sxs-lookup"><span data-stu-id="f6d3e-102">Open a browser and navigate to the [Azure Active Directory admin center](https://aad.portal.azure.com).</span></span> <span data-ttu-id="f6d3e-103">Inicie sesión con una **cuenta personal** (también conocido como Microsoft Account) o una **cuenta profesional o educativa**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-103">Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.</span></span>
 
-1. <span data-ttu-id="f7cde-104">Seleccione **Agregar una aplicación** en la parte superior de la página.</span><span class="sxs-lookup"><span data-stu-id="f7cde-104">Select **Add an app** at the top of the page.</span></span>
+1. <span data-ttu-id="f6d3e-104">Seleccione **Azure Active Directory** en el panel de navegación de la izquierda y, después, seleccione **registros de aplicaciones (vista previa)** en **administrar**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-104">Select **Azure Active Directory** in the left-hand navigation, then select **App registrations (Preview)** under **Manage**.</span></span>
 
-    > [!NOTE]
-    > <span data-ttu-id="f7cde-105">Si ve más de un botón **Agregar una aplicación** en la página, seleccione el que corresponda a la lista de **aplicaciones convergentes** .</span><span class="sxs-lookup"><span data-stu-id="f7cde-105">If you see more than one **Add an app** button on the page, select the one that corresponds to the **Converged apps** list.</span></span>
+    ![<span data-ttu-id="f6d3e-105">Una captura de pantalla de los registros de la aplicación</span><span class="sxs-lookup"><span data-stu-id="f6d3e-105">A screenshot of the App registrations</span></span> ](./images/aad-portal-app-registrations.png)
 
-1. <span data-ttu-id="f7cde-106">En la página **registrar la aplicación** , establezca el tutorial **nombre** de la aplicación en **php Graph** y seleccione **crear**.</span><span class="sxs-lookup"><span data-stu-id="f7cde-106">On the **Register your application** page, set the **Application Name** to **PHP Graph Tutorial** and select **Create**.</span></span>
+1. <span data-ttu-id="f6d3e-106">Seleccione **registro nuevo**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-106">Select **New registration**.</span></span> <span data-ttu-id="f6d3e-107">En la página **registrar una aplicación** , establezca los valores de la siguiente manera.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-107">On the **Register an application** page, set the values as follows.</span></span>
 
-    ![Captura de pantalla de la creación de una nueva aplicación en el sitio web del portal de registro de aplicaciones](./images/arp-create-app-01.png)
+    - <span data-ttu-id="f6d3e-108">Establezca **el nombre** en `PHP Graph Tutorial`.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-108">Set **Name** to `PHP Graph Tutorial`.</span></span>
+    - <span data-ttu-id="f6d3e-109">Establezca **tipos de cuenta compatibles** en **cuentas de cualquier directorio de la organización y cuentas personales de Microsoft**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-109">Set **Supported account types** to **Accounts in any organizational directory and personal Microsoft accounts**.</span></span>
+    - <span data-ttu-id="f6d3e-110">En **URI**de redireccionamiento, establezca la primera lista desplegable para `Web` y establezca el `http://localhost:8000/callback`valor en.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-110">Under **Redirect URI**, set the first drop-down to `Web` and set the value to `http://localhost:8000/callback`.</span></span>
 
-1. <span data-ttu-id="f7cde-108">En la página **registro del tutorial de php Graph** , en la sección **propiedades** , copie el identificador de la **aplicación** ya que lo necesitará más adelante.</span><span class="sxs-lookup"><span data-stu-id="f7cde-108">On the **PHP Graph Tutorial Registration** page, under the **Properties** section, copy the **Application Id** as you will need it later.</span></span>
+    ![Captura de pantalla de la página registrar una aplicación](./images/aad-register-an-app.png)
 
-    ![Captura de pantalla del identificador de la aplicación recién creada](./images/arp-create-app-02.png)
+1. <span data-ttu-id="f6d3e-112">Elija **registrar**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-112">Choose **Register**.</span></span> <span data-ttu-id="f6d3e-113">En la página **tutorial de php Graph** , copie el valor del **identificador de la aplicación (cliente)** y guárdelo, lo necesitará en el paso siguiente.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-113">On the **PHP Graph Tutorial** page, copy the value of the **Application (client) ID** and save it, you will need it in the next step.</span></span>
 
-1. <span data-ttu-id="f7cde-110">Desplácese hacia abajo hasta la sección secretos de la **aplicación** .</span><span class="sxs-lookup"><span data-stu-id="f7cde-110">Scroll down to the **Application Secrets** section.</span></span>
+    ![Captura de pantalla del identificador de la aplicación del nuevo registro de la aplicación](./images/aad-application-id.png)
 
-    1. <span data-ttu-id="f7cde-111">Seleccione **generar nueva contraseña**.</span><span class="sxs-lookup"><span data-stu-id="f7cde-111">Select **Generate New Password**.</span></span>
-    1. <span data-ttu-id="f7cde-112">En el cuadro de diálogo **nueva contraseña generada** , copie el contenido del cuadro tal y como lo necesitará más adelante.</span><span class="sxs-lookup"><span data-stu-id="f7cde-112">In the **New password generated** dialog, copy the contents of the box as you will need it later.</span></span>
+1. <span data-ttu-id="f6d3e-115">Seleccione **certificados & secretos** en **administrar**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-115">Select **Certificates & secrets** under **Manage**.</span></span> <span data-ttu-id="f6d3e-116">Seleccione el botón **nuevo secreto de cliente** .</span><span class="sxs-lookup"><span data-stu-id="f6d3e-116">Select the **New client secret** button.</span></span> <span data-ttu-id="f6d3e-117">Escriba un valor en **Descripción** y seleccione una de las opciones para **Expires** y elija **Agregar**.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-117">Enter a value in **Description** and select one of the options for **Expires** and choose **Add**.</span></span>
 
-        > [!IMPORTANT]
-        > <span data-ttu-id="f7cde-113">Esta contraseña no se vuelve a mostrar nunca, por lo que debe asegurarse de que la copia ahora.</span><span class="sxs-lookup"><span data-stu-id="f7cde-113">This password is never shown again, so make sure you copy it now.</span></span>
+    ![Captura de pantalla del cuadro de diálogo Agregar un secreto de cliente](./images/aad-new-client-secret.png)
 
-    ![Captura de pantalla de la contraseña de la aplicación recién creada](./images/arp-create-app-03.png)
+1. <span data-ttu-id="f6d3e-119">Copie el valor de secreto de cliente antes de salir de esta página.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-119">Copy the client secret value before you leave this page.</span></span> <span data-ttu-id="f6d3e-120">Lo necesitará en el paso siguiente.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-120">You will need it in the next step.</span></span>
 
-1. <span data-ttu-id="f7cde-115">Desplácese hacia abajo hasta la sección **plataformas** .</span><span class="sxs-lookup"><span data-stu-id="f7cde-115">Scroll down to the **Platforms** section.</span></span>
+    > [!IMPORTANT]
+    > <span data-ttu-id="f6d3e-121">Este secreto de cliente no se vuelve a mostrar nunca, así que asegúrese de copiarlo ahora.</span><span class="sxs-lookup"><span data-stu-id="f6d3e-121">This client secret is never shown again, so make sure you copy it now.</span></span>
 
-    1. <span data-ttu-id="f7cde-116">Seleccione **Agregar plataforma**.</span><span class="sxs-lookup"><span data-stu-id="f7cde-116">Select **Add Platform**.</span></span>
-    1. <span data-ttu-id="f7cde-117">En el cuadro de diálogo **Agregar plataforma** , seleccione **Web**.</span><span class="sxs-lookup"><span data-stu-id="f7cde-117">In the **Add Platform** dialog, select **Web**.</span></span>
-
-        ![Captura de pantalla que crea una plataforma para la aplicación](./images/arp-create-app-04.png)
-
-    1. <span data-ttu-id="f7cde-119">En el cuadro plataforma **Web** , escriba la dirección `http://localhost:8000/callback` URL de las **direcciones URL**de redireccionamiento.</span><span class="sxs-lookup"><span data-stu-id="f7cde-119">In the **Web** platform box, enter the URL `http://localhost:8000/callback` for the **Redirect URLs**.</span></span>
-
-        ![Captura de pantalla de la plataforma web recién agregada para la aplicación](./images/arp-create-app-05.png)
-
-1. <span data-ttu-id="f7cde-121">Desplácese hasta la parte inferior de la página y seleccione **Guardar**.</span><span class="sxs-lookup"><span data-stu-id="f7cde-121">Scroll to the bottom of the page and select **Save**.</span></span>
+    ![Captura de pantalla del secreto de cliente recién agregado](./images/aad-copy-client-secret.png)
