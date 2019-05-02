@@ -249,7 +249,7 @@ Agregue esta acción a `./routes/web.php`.
 Route::get('/signout', 'AuthController@signout');
 ```
 
-ReInicie el servidor y pase por el proceso de inicio de sesión. Deberás volver a la Página principal, pero la interfaz de usuario debe cambiar para indicar que has iniciado sesión.
+Reinicie el servidor y pase por el proceso de inicio de sesión. Deberás volver a la Página principal, pero la interfaz de usuario debe cambiar para indicar que has iniciado sesión.
 
 ![Una captura de pantalla de la Página principal después de iniciar sesión](./images/add-aad-auth-01.png)
 
