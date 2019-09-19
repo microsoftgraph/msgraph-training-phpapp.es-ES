@@ -12,7 +12,7 @@ Laravel crea un nuevo directorio al `graph-tutorial` que se llama y scaffolding 
 php artisan serve
 ```
 
-Abra el explorador y vaya a `http://localhost:8000`. Si todo funciona, verá una página predeterminada de Laravel. Si no ve esa página, compruebe los [documentos de Laravel](https://laravel.com/docs/5.6).
+Abra el explorador y vaya a `http://localhost:8000`. Si todo funciona, verá una página predeterminada de Laravel. Si no ve esa página, compruebe los [documentos de Laravel](https://laravel.com/docs/6.0).
 
 Antes de continuar, instale algunas bibliotecas adicionales que usará más adelante:
 
@@ -116,7 +116,7 @@ Empiece por crear el diseño global para la aplicación. Cree un nuevo archivo e
 
 Este código agrega un [bootstrap](http://getbootstrap.com/) para los estilos sencillos y la [fuente maravilla](https://fontawesome.com/) para algunos iconos simples. También define un diseño global con una barra de navegación.
 
-Ahora, `./public/css/app.css` abra y reemplace todo el contenido por lo siguiente.
+Cree un nuevo directorio en el `./public` directorio denominado `css`y, a continuación, cree un nuevo `./public/css` archivo en `app.css`el directorio denominado. Agregue el siguiente código.
 
 ```css
 body {
