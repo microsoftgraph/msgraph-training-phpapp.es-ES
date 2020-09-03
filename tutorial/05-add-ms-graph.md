@@ -4,7 +4,13 @@ En este ejercicio, incorporará Microsoft Graph a la aplicación. Para esta apli
 
 ## <a name="get-calendar-events-from-outlook"></a>Obtener eventos de calendario de Outlook
 
-1. Cree un nuevo archivo en el directorio **./app/http/Controllers** denominado `CalendarController.php`y agregue el siguiente código.
+1. Cree un nuevo directorio en el directorio **./app** denominado `TimeZones` , cree un nuevo archivo en ese directorio denominado `TimeZones.php` y agregue el siguiente código.
+
+    :::code language="php" source="../demo/graph-tutorial/app/TimeZones/TimeZones.php":::
+
+    Esta clase implementa una asignación simplista de los nombres de zona horaria de Windows a los identificadores de zona horaria de IANA.
+
+1. Cree un nuevo archivo en el directorio **./app/http/Controllers** denominado `CalendarController.php` y agregue el siguiente código.
 
     ```php
     <?php
@@ -16,6 +22,7 @@ En este ejercicio, incorporará Microsoft Graph a la aplicación. Para esta apli
     use Microsoft\Graph\Graph;
     use Microsoft\Graph\Model;
     use App\TokenStore\TokenCache;
+    use App\TimeZones\TimeZones;
 
     class CalendarController extends Controller
     {
@@ -23,6 +30,42 @@ En este ejercicio, incorporará Microsoft Graph a la aplicación. Para esta apli
       {
         $viewData = $this->loadViewData();
 
+        $graph = $this->getGraph();
+
+        // Get user's timezone
+        $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
+
+        // Get start and end of week
+        $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
+        $endOfWeek = new \DateTimeImmutable('sunday', $timezone);
+
+        $queryParams = array(
+          'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
+          'endDateTime' => $endOfWeek->format(\DateTimeInterface::ISO8601),
+          // Only request the properties used by the app
+          '$select' => 'subject,organizer,start,end',
+          // Sort them by start time
+          '$orderby' => 'start/dateTime',
+          // Limit results to 25
+          '$top' => 25
+        );
+
+        // Append query parameters to the '/me/calendarView' url
+        $getEventsUrl = '/me/calendarView?'.http_build_query($queryParams);
+
+        $events = $graph->createRequest('GET', $getEventsUrl)
+          // Add the user's timezone to the Prefer header
+          ->addHeaders(array(
+            'Prefer' => 'outlook.timezone="'.$viewData['userTimeZone'].'"'
+          ))
+          ->setReturnType(Model\Event::class)
+          ->execute();
+
+        return response()->json($events);
+      }
+
+      private function getGraph(): Graph
+      {
         // Get the access token from the cache
         $tokenCache = new TokenCache();
         $accessToken = $tokenCache->getAccessToken();
@@ -30,29 +73,19 @@ En este ejercicio, incorporará Microsoft Graph a la aplicación. Para esta apli
         // Create a Graph client
         $graph = new Graph();
         $graph->setAccessToken($accessToken);
-
-        $queryParams = array(
-          '$select' => 'subject,organizer,start,end',
-          '$orderby' => 'createdDateTime DESC'
-        );
-
-        // Append query parameters to the '/me/events' url
-        $getEventsUrl = '/me/events?'.http_build_query($queryParams);
-
-        $events = $graph->createRequest('GET', $getEventsUrl)
-          ->setReturnType(Model\Event::class)
-          ->execute();
-
-        return response()->json($events);
+        return $graph;
       }
     }
     ```
 
     Tenga en cuenta lo que está haciendo este código.
 
-    - La dirección URL a la que se `/v1.0/me/events`llamará es.
+    - La dirección URL a la que se llamará es `/v1.0/me/calendarView` .
+    - Los `startDateTime` `endDateTime` parámetros y definen el inicio y el final de la vista.
     - El `$select` parámetro limita los campos devueltos para cada evento a solo aquellos que la vista usará realmente.
     - El `$orderby` parámetro ordena los resultados por la fecha y hora en que se crearon, con el elemento más reciente en primer lugar.
+    - El `$top` parámetro limita los resultados a 25 eventos.
+    - El `Prefer: outlook.timezone=""` encabezado hace que las horas de inicio y finalización de la respuesta se ajusten a la zona horaria preferida del usuario.
 
 1. Actualice las rutas en **./Routes/Web.php** para agregar una ruta a este nuevo controlador.
 

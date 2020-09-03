@@ -23,6 +23,12 @@ Antes de continuar, instale algunos paquetes adicionales que usará más adelant
 - [OAuth2-Client](https://github.com/thephpleague/oauth2-client) para controlar los flujos de tokens de inicio de sesión y OAuth.
 - [Microsoft-Graph](https://github.com/microsoftgraph/msgraph-sdk-php) para realizar llamadas a Microsoft Graph.
 
+1. Ejecute el siguiente comando para quitar la versión existente de `guzzlehttp/guzzle` . La versión instalada por Laravel entra en conflicto con la versión requerida por el SDK PHP de Microsoft Graph.
+
+    ```Shell
+    composer remove guzzlehttp/guzzle
+    ```
+
 1. Ejecute el siguiente comando en su CLI.
 
     ```Shell
@@ -37,7 +43,7 @@ Antes de continuar, instale algunos paquetes adicionales que usará más adelant
 
     Este código agrega un [bootstrap](http://getbootstrap.com/) para los estilos sencillos y la [fuente maravilla](https://fontawesome.com/) para algunos iconos simples. También define un diseño global con una barra de navegación.
 
-1. Cree un nuevo directorio en el `./public` directorio denominado `css`y, a continuación, cree un nuevo `./public/css` archivo en `app.css`el directorio denominado. Agregue el siguiente código.
+1. Cree un nuevo directorio en el `./public` directorio denominado `css` y, a continuación, cree un nuevo archivo en el `./public/css` directorio denominado `app.css` . Agregue el siguiente código.
 
     :::code language="css" source="../demo/graph-tutorial/public/css/app.css":::
 
@@ -45,7 +51,7 @@ Antes de continuar, instale algunos paquetes adicionales que usará más adelant
 
     :::code language="php" source="../demo/graph-tutorial/resources/views/welcome.blade.php" id="WelcomeSnippet":::
 
-1. Actualice la clase `Controller` base en **./app/http/Controllers/Controller.php** agregando la siguiente función a la clase.
+1. Actualice la `Controller` clase base en **./app/http/Controllers/Controller.php** agregando la siguiente función a la clase.
 
     :::code language="php" source="../demo/graph-tutorial/app/Http/Controllers/Controller.php" id="LoadViewDataSnippet":::
 

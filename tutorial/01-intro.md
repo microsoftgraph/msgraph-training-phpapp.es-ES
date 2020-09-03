@@ -18,7 +18,7 @@ También debe tener una cuenta de Microsoft personal con un buzón de correo en 
 - Puede [registrarse para el programa de desarrolladores de office 365](https://developer.microsoft.com/office/dev-program) para obtener una suscripción gratuita a Office 365.
 
 > [!NOTE]
-> Este tutorial se ha redactado con PHP versión 7.4.4, Composer versión 1.10.1 y Laravel Installer versión 3.0.1. Los pasos de esta guía pueden funcionar con otras versiones, pero no se han probado.
+> Este tutorial se ha escrito con la versión 7.4.4 de PHP, Composer versión 1.10.10 y Laravel Installer versión 3.2.0. Los pasos de esta guía pueden funcionar con otras versiones, pero no se han probado.
 
 ## <a name="feedback"></a>Comentarios
 

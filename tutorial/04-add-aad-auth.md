@@ -2,11 +2,11 @@
 
 En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir la autenticación con Azure AD. Esto es necesario para obtener el token de acceso de OAuth necesario para llamar a Microsoft Graph. En este paso, integrará la biblioteca [de OAuth2-Client](https://github.com/thephpleague/oauth2-client) en la aplicación.
 
-1. Abra el `.env` archivo en la raíz de la aplicación PHP y agregue el siguiente código al final del archivo.
+1. Abra el archivo **. env** en la raíz de la aplicación PHP y agregue el siguiente código al final del archivo.
 
     :::code language="ini" source="../demo/graph-tutorial/.env.example" id="OAuthSettingsSnippet":::
 
-1. Reemplace `YOUR_APP_ID_HERE` por el identificador de la aplicación del portal de registro de la `YOUR_APP_PASSWORD_HERE` aplicación y reemplace por la contraseña que ha generado.
+1. Reemplace `YOUR_APP_ID_HERE` por el identificador de la aplicación del portal de registro de la aplicación y reemplace `YOUR_APP_PASSWORD_HERE` por la contraseña que ha generado.
 
     > [!IMPORTANT]
     > Si usa un control de código fuente como GIT, ahora sería un buen momento para excluir el `.env` archivo del control de código fuente para evitar la pérdida inadvertida del identificador de la aplicación y la contraseña.
@@ -105,9 +105,9 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
     }
     ```
 
-    Esto define un controlador con dos acciones: `signin` y `callback`.
+    Esto define un controlador con dos acciones: `signin` y `callback` .
 
-    La `signin` acción genera la dirección URL de inicio de sesión de Azure `state` ad, guarda el valor generado por el cliente de OAuth y, a continuación, redirige el explorador a la página de inicio de sesión de Azure ad.
+    La `signin` acción genera la dirección URL de inicio de sesión de Azure ad, guarda el `state` valor generado por el cliente de OAuth y, a continuación, redirige el explorador a la página de inicio de sesión de Azure ad.
 
     La `callback` acción es donde Azure redirige después de que se complete el inicio de sesión. Esa acción garantiza que el `state` valor coincida con el valor guardado y, a continuación, los usuarios el código de autorización enviado por Azure para solicitar un token de acceso. A continuación, se redirige de nuevo a la Página principal con el token de acceso en el valor de error temporal. Usará esto para comprobar que el inicio de sesión está funcionando antes de continuar.
 
@@ -118,13 +118,22 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
     Route::get('/callback', 'AuthController@callback');
     ```
 
-1. Inicie el servidor y vaya a `https://localhost:8000`. Haga clic en el botón de inicio de sesión y se le `https://login.microsoftonline.com`redirigirá a. Inicie sesión con su cuenta de Microsoft y dé su consentimiento a los permisos solicitados. El explorador redirige a la aplicación, que muestra el token.
+1. Inicie el servidor y vaya a `https://localhost:8000` . Haga clic en el botón de inicio de sesión y se le redirigirá a `https://login.microsoftonline.com` . Inicie sesión con su cuenta de Microsoft.
+
+1. Examine la solicitud de consentimiento. La lista de permisos se corresponde con la lista de ámbitos de permisos configurados en **. env**.
+
+    - **Mantener el acceso a los datos a los que ha dado acceso a:** ( `offline_access` ) este permiso se solicita mediante la MSAL para recuperar los tokens de actualización.
+    - **Inicie sesión y lea su perfil:** ( `User.Read` ) este permiso permite a la aplicación obtener el perfil y la foto de perfil del usuario que ha iniciado sesión.
+    - **Leer la configuración del buzón de correo:** ( `MailboxSettings.Read` ) este permiso permite que la aplicación Lea la configuración del buzón del usuario, incluido el formato de hora y zona horaria.
+    - **Tener acceso completo a sus calendarios:** ( `Calendars.ReadWrite` ) este permiso permite a la aplicación leer eventos en el calendario del usuario, agregar nuevos eventos y modificar los existentes.
+
+1. Consentimiento para los permisos solicitados. El explorador redirige a la aplicación, que muestra el token.
 
 ### <a name="get-user-details"></a>Obtener detalles del usuario
 
 En esta sección, actualizará el `callback` método para obtener el perfil del usuario de Microsoft Graph.
 
-1. Agregue las siguientes `use` instrucciones a la parte superior de **/App/http/Controllers/AuthController.php**, debajo `namespace App\Http\Controllers;` de la línea.
+1. Agregue las siguientes `use` instrucciones a la parte superior de **/App/http/Controllers/AuthController.php**, debajo de la `namespace App\Http\Controllers;` línea.
 
     ```php
     use Microsoft\Graph\Graph;
@@ -143,7 +152,7 @@ En esta sección, actualizará el `callback` método para obtener el perfil del 
       $graph = new Graph();
       $graph->setAccessToken($accessToken->getToken());
 
-      $user = $graph->createRequest('GET', '/me')
+      $user = $graph->createRequest('GET', '/me?$select=displayName,mail,mailboxSettings,userPrincipalName')
         ->setReturnType(Model\User::class)
         ->execute();
 
@@ -160,7 +169,7 @@ El nuevo código crea un `Graph` objeto, asigna el token de acceso y, a continua
 
 Ahora que puede obtener tokens, es el momento de implementar una forma de almacenarlos en la aplicación. Dado que se trata de una aplicación de ejemplo, por razones de simplicidad, se almacenará en la sesión. Una aplicación real usaría una solución de almacenamiento seguro más confiable, como una base de datos.
 
-1. Cree un nuevo directorio en el directorio **./app** denominado `TokenStore`, cree un nuevo archivo en ese directorio denominado `TokenCache.php`y agregue el siguiente código.
+1. Cree un nuevo directorio en el directorio **./app** denominado `TokenStore` , cree un nuevo archivo en ese directorio denominado `TokenCache.php` y agregue el siguiente código.
 
     ```php
     <?php
@@ -175,6 +184,7 @@ Ahora que puede obtener tokens, es el momento de implementar una forma de almace
           'tokenExpires' => $accessToken->getExpires(),
           'userName' => $user->getDisplayName(),
           'userEmail' => null !== $user->getMail() ? $user->getMail() : $user->getUserPrincipalName()
+          'userTimeZone' => $user->getMailboxSettings()->getTimeZone()
         ]);
       }
 
@@ -184,6 +194,7 @@ Ahora que puede obtener tokens, es el momento de implementar una forma de almace
         session()->forget('tokenExpires');
         session()->forget('userName');
         session()->forget('userEmail');
+        session()->forget('userTimeZone');
       }
 
       public function getAccessToken() {
@@ -199,13 +210,13 @@ Ahora que puede obtener tokens, es el momento de implementar una forma de almace
     }
     ```
 
-1. Agregue la siguiente `use` instrucción a la parte superior de **./app/http/Controllers/AuthController.php**, debajo `namespace App\Http\Controllers;` de la línea.
+1. Agregue la siguiente `use` instrucción a la parte superior de **./app/http/Controllers/AuthController.php**, debajo de la `namespace App\Http\Controllers;` línea.
 
     ```php
     use App\TokenStore\TokenCache;
     ```
 
-1. Reemplace el `try` bloque de la función `callback` existente por lo siguiente.
+1. Reemplace el `try` bloque de la `callback` función existente por lo siguiente.
 
     :::code language="php" source="../demo/graph-tutorial/app/Http/Controllers/AuthController.php" id="StoreTokensSnippet":::
 
@@ -233,7 +244,7 @@ Antes de probar esta nueva característica, agregue una forma de cerrar sesión.
 
 ## <a name="refreshing-tokens"></a>Actualizar tokens
 
-En este punto, la aplicación tiene un token de acceso, que se envía `Authorization` en el encabezado de las llamadas a la API. Este es el token que permite que la aplicación tenga acceso a Microsoft Graph en nombre del usuario.
+En este punto, la aplicación tiene un token de acceso, que se envía en el `Authorization` encabezado de las llamadas a la API. Este es el token que permite que la aplicación tenga acceso a Microsoft Graph en nombre del usuario.
 
 Sin embargo, este token es de corta duración. El token expira una hora después de su emisión. Aquí es donde el token de actualización se vuelve útil. El token de actualización permite que la aplicación solicite un nuevo token de acceso sin que el usuario tenga que iniciar sesión de nuevo. Actualice el código de administración de tokens para implementar la actualización de tokens.
 

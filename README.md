@@ -14,6 +14,10 @@ Si solo quiere el ejemplo completado que se genera siguiendo este laboratorio, p
 
 - [Proyecto completado](demo)
 
+## <a name="more-samples"></a>Más muestras
+
+Si está buscando otros ejemplos de gráficos fuera de los escenarios del calendario, o si desea aportar otros ejemplos a este proyecto, consulte la [rama ejemplos](https://github.com/microsoftgraph/msgraph-training-phpapp/tree/samples).
+
 ## <a name="disclaimer"></a>Aviso de declinación de responsabilidades
 
 **Este código se proporciona *tal cual* sin garantías de ningún tipo, ya sea expresa o implícita, incluidas las garantías implícitas de idoneidad para un fin determinado, comerciabilidad o ausencia de infracción.**
