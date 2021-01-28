@@ -4,12 +4,16 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
 
 1. Abra el **archivo .env** en la raíz de la aplicación PHP y agregue el siguiente código al final del archivo.
 
-    :::code language="ini" source="../demo/graph-tutorial/example.env" range="48-54":::
+    :::code language="ini" source="../demo/graph-tutorial/example.env" range="51-57":::
 
-1. Reemplace por el identificador de aplicación del Portal de registro de aplicaciones y `YOUR_APP_ID_HERE` reemplace por la contraseña que `YOUR_APP_PASSWORD_HERE` generó.
+1. Reemplace por el identificador de aplicación del Portal de registro de aplicaciones y `YOUR_APP_ID_HERE` reemplace por la contraseña que `YOUR_APP_SECRET_HERE` generó.
 
     > [!IMPORTANT]
     > Si usas el control de código fuente como Git, ahora sería un buen momento para excluir el archivo del control de código fuente para evitar la pérdida involuntaria del identificador de la aplicación y la `.env` contraseña.
+
+1. Cree un nuevo archivo en la **carpeta ./config** con nombre `azure.php` y agregue el siguiente código.
+
+    :::code language="php" source="../demo/graph-tutorial/config/azure.php":::
 
 ## <a name="implement-sign-in"></a>Implementar el inicio de sesión
 
@@ -29,13 +33,13 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
       {
         // Initialize the OAuth client
         $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-          'clientId'                => env('OAUTH_APP_ID'),
-          'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-          'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-          'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-          'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
+          'clientId'                => config('azure.appId'),
+          'clientSecret'            => config('azure.appSecret'),
+          'redirectUri'             => config('azure.redirectUri'),
+          'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+          'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
           'urlResourceOwnerDetails' => '',
-          'scopes'                  => env('OAUTH_SCOPES')
+          'scopes'                  => config('azure.scopes')
         ]);
 
         $authUrl = $oauthClient->getAuthorizationUrl();
@@ -71,13 +75,13 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
         if (isset($authCode)) {
           // Initialize the OAuth client
           $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-            'clientId'                => env('OAUTH_APP_ID'),
-            'clientSecret'            => env('OAUTH_APP_PASSWORD'),
-            'redirectUri'             => env('OAUTH_REDIRECT_URI'),
-            'urlAuthorize'            => env('OAUTH_AUTHORITY').env('OAUTH_AUTHORIZE_ENDPOINT'),
-            'urlAccessToken'          => env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'),
+            'clientId'                => config('azure.appId'),
+            'clientSecret'            => config('azure.appSecret'),
+            'redirectUri'             => config('azure.redirectUri'),
+            'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+            'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
             'urlResourceOwnerDetails' => '',
-            'scopes'                  => env('OAUTH_SCOPES')
+            'scopes'                  => config('azure.scopes')
           ]);
 
           try {
@@ -109,7 +113,7 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
 
     La acción genera la dirección URL de inicio de sesión de Azure AD, guarda el valor generado por el cliente `signin` de OAuth y, a continuación, redirige el explorador a la página de inicio de sesión `state` de Azure AD.
 
-    La `callback` acción es donde Azure redirige una vez completado el inicio de sesión. Esa acción se asegura de que el valor coincide con el valor guardado y, a continuación, usa el código de autorización enviado por `state` Azure para solicitar un token de acceso. A continuación, redirige de nuevo a la página principal con el token de acceso en el valor de error temporal. Usará esta opción para comprobar que el inicio de sesión funciona antes de seguir adelante.
+    La `callback` acción es donde Azure redirige una vez completado el inicio de sesión. Esa acción se asegura de que el valor coincide con el valor guardado y, a continuación, usa el código de autorización enviado por `state` Azure para solicitar un token de acceso. A continuación, redirige de nuevo a la página principal con el token de acceso en el valor de error temporal. Usará esto para comprobar que el inicio de sesión funciona antes de seguir.
 
 1. Agregue las rutas a **./routes/web.php**.
 
@@ -125,9 +129,9 @@ En este ejercicio, ampliará la aplicación del ejercicio anterior para admitir 
     - **Mantenga el acceso a los datos** a los que le ha concedido acceso: ( ) MSAL solicita este permiso para recuperar `offline_access` tokens de actualización.
     - **Inicie sesión y lea su perfil:** ( ) Este permiso permite a la aplicación obtener el perfil y la foto de perfil del usuario que ha iniciado `User.Read` sesión.
     - **Lea la configuración del buzón:** ( ) Este permiso permite a la aplicación leer la configuración del buzón del usuario, incluido el formato de zona `MailboxSettings.Read` horaria y hora.
-    - **Tener acceso completo a los calendarios:** ( ) Este permiso permite a la aplicación leer eventos en el calendario del usuario, agregar nuevos eventos y modificar los `Calendars.ReadWrite` existentes.
+    - Tener acceso completo a los **calendarios:** ( ) Este permiso permite a la aplicación leer eventos en el calendario del usuario, agregar nuevos eventos y modificar los `Calendars.ReadWrite` existentes.
 
-1. Consentimiento de los permisos solicitados. El explorador redirige a la aplicación y muestra el token.
+1. Consentimiento de los permisos solicitados. El explorador redirige a la aplicación mostrando el token.
 
 ### <a name="get-user-details"></a>Obtener detalles del usuario
 
@@ -167,7 +171,7 @@ El nuevo código crea un objeto, asigna el token de acceso y, a continuación, l
 
 ## <a name="storing-the-tokens"></a>Almacenar los tokens
 
-Ahora que puedes obtener tokens, es el momento de implementar una forma de almacenarlos en la aplicación. Dado que se trata de una aplicación de ejemplo, por motivos de simplicidad, las almacenarás en la sesión. Una aplicación del mundo real usaría una solución de almacenamiento seguro más confiable, como una base de datos.
+Ahora que puede obtener tokens, es el momento de implementar una forma de almacenarlos en la aplicación. Dado que se trata de una aplicación de ejemplo, por motivos de simplicidad, las almacenarás en la sesión. Una aplicación del mundo real usaría una solución de almacenamiento seguro más confiable, como una base de datos.
 
 1. Crea un nuevo directorio en el directorio **./app** denominado , luego crea un nuevo archivo en ese directorio denominado `TokenStore` y agrega el siguiente `TokenCache.php` código.
 
@@ -222,7 +226,7 @@ Ahora que puedes obtener tokens, es el momento de implementar una forma de almac
 
 ## <a name="implement-sign-out"></a>Implementar el cerrar sesión
 
-Antes de probar esta nueva característica, agrega una forma de cerrar sesión.
+Antes de probar esta nueva característica, agregue una forma de cerrar sesión.
 
 1. Agregue la siguiente acción a la `AuthController` clase.
 
@@ -256,4 +260,4 @@ Sin embargo, este token es de corta duración. El token expira una hora después
 
     :::code language="php" source="../demo/graph-tutorial/app/TokenStore/TokenCache.php" id="GetAccessTokenSnippet":::
 
-Este método comprueba primero si el token de acceso ha expirado o está próximo a expirar. Si es así, usa el token de actualización para obtener nuevos tokens y, a continuación, actualiza la memoria caché y devuelve el nuevo token de acceso.
+Este método comprueba primero si el token de acceso ha expirado o está a punto de expirar. Si es así, usa el token de actualización para obtener nuevos tokens y, a continuación, actualiza la memoria caché y devuelve el nuevo token de acceso.

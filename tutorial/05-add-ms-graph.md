@@ -39,6 +39,8 @@ En este ejercicio incorporará Microsoft Graph en la aplicación. Para esta apli
         $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
         $endOfWeek = new \DateTimeImmutable('sunday', $timezone);
 
+        $viewData['dateRange'] = $startOfWeek->format('M j, Y').' - '.$endOfWeek->format('M j, Y');
+
         $queryParams = array(
           'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
           'endDateTime' => $endOfWeek->format(\DateTimeInterface::ISO8601),
@@ -87,7 +89,7 @@ En este ejercicio incorporará Microsoft Graph en la aplicación. Para esta apli
     - El `$top` parámetro limita los resultados a 25 eventos.
     - El encabezado hace que las horas de inicio y finalización de la respuesta se ajusten a la zona horaria preferida `Prefer: outlook.timezone=""` del usuario.
 
-1. Actualice las rutas en **./routes/web.php** para agregar una ruta a este controlador nuevo.
+1. Actualice las rutas en **./routes/web.php** para agregar una ruta a este nuevo controlador.
 
     ```php
     Route::get('/calendar', 'CalendarController@calendar');
@@ -99,7 +101,7 @@ En este ejercicio incorporará Microsoft Graph en la aplicación. Para esta apli
 
 Ahora puede agregar una vista para mostrar los resultados de una manera más fácil de usar.
 
-1. Cree un nuevo archivo en el directorio **./resources/views** con nombre `calendar.blade.php` y agregue el siguiente código.
+1. Cree un nuevo archivo en el directorio **./resources/views** denominado `calendar.blade.php` y agregue el siguiente código.
 
     :::code language="php" source="../demo/graph-tutorial/resources/views/calendar.blade.php" id="CalendarSnippet":::
 
